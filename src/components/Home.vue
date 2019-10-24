@@ -1,19 +1,36 @@
 <template>
   <div class="home">
-    <form action="#" class="join">
+    <form action="#" class="join" @submit.prevent="join">
       <h1>Start Chatting</h1>
       <label for="room" class="label">Room ID</label>
-      <input type="text" class="input" name="room" placeholder="contoh : abc">
+      <input type="text" class="input" name="room" placeholder="contoh : abc" v-model.trim="room">
       <label for="room" class="label">Your Name</label>
-      <input type="text" class="input" name="name">
+      <input type="text" class="input" name="name" v-model.trim="name">
       <button type="submit" class="button button--primary">Join</button>
     </form>
   </div>
 </template>
 
 <script>
+import {mapMutations} from 'vuex'
+import uuid from 'uuid/v4'
+
 export default {
-  
+  data(){
+    return{
+      room: uuid(),
+      name: null
+    }
+  },
+  methods:{
+    ...mapMutations({
+      setName: 'setName'
+    }),
+    join(){
+      this.setName(this.name)
+      this.$router.push({name: 'room', params: {room: this.room}})
+    }
+  }
 }
 </script>
 

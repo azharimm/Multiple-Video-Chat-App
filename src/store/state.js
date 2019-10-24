@@ -1,3 +1,9 @@
 export default {
-    room: 'abc'
+    room: '',
+    state: {
+        name: '',
+        muted: false,
+        paused: false
+    },
+    clients : []
 }
