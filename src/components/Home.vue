@@ -18,7 +18,7 @@ import uuid from 'uuid/v4'
 export default {
   data(){
     return{
-      room: uuid(),
+      room: this.$route.query.room || uuid(),
       name: null
     }
   },
