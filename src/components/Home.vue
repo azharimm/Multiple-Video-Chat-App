@@ -14,6 +14,7 @@
 <script>
 import {mapMutations} from 'vuex'
 import uuid from 'uuid/v4'
+import SimpleWebRTC from 'simplewebrtc'
 
 export default {
   data(){
@@ -28,6 +29,12 @@ export default {
     }),
     join(){
       this.setName(this.name)
+      window.webrtc = new SimpleWebRTC({
+        localVideoEl: '',
+        remoteVideosEl: '',
+        autoRequestMedia: true,
+        nick: this.name
+      })
       this.$router.push({name: 'room', params: {room: this.room}})
     }
   }

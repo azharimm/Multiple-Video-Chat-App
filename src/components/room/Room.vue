@@ -1,9 +1,9 @@
 <template>
     <div class="room">
         <div class="people" id="people">
-            <div class="person" v-for="x in 10" :key="x">
+            <div class="person">
                 <div class="person__video">
-                    <video></video>
+                    <video ref="me" id="me" autoplay="true"></video>
                 </div>
                 <div class="person__name">
                     Azhari
@@ -15,7 +15,15 @@
 
 <script>
 export default {
-    props: ['room']
+    props: ['room'],
+    mounted(){
+        window.webrtc.joinRoom(this.room)
+        window.webrtc.on('localStream', (stream) => {
+            var me = document.querySelector("#me");
+            me.srcObject = stream;
+            me.muted = true;
+        })
+    }
 }
 </script>
 
