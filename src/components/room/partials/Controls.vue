@@ -1,15 +1,20 @@
 <template>
     <u class="controls">
         <li class="controls__item">
-            <a href="" class="controls__link" v-if="state.muted" @click.prevent="unmute">
+            <a href="#" class="controls__link" v-if="state.muted" @click.prevent="unmute">
                 Unmute me
             </a>
-            <a href="" class="controls__link" v-else @click.prevent="mute">
+            <a href="#" class="controls__link" v-else @click.prevent="mute">
                 Mute me
             </a>
         </li>
         <li class="controls__item">
-            <a href="" class="controls__link">Pause Video</a>
+            <a href="#" class="controls__link" v-if="state.paused" @click.prevent="unpause">
+                Unpause Video
+            </a>
+            <a href="#" class="controls__link" v-else @click.prevent="pause">
+                Pause Video
+            </a>
         </li>
     </u>
 </template>
@@ -24,7 +29,8 @@ export default {
     },
     methods:{
         ...mapMutations({
-            setMuted:'setMuted'
+            setMuted:'setMuted',
+            setPaused:'setPaused'
         }),
         mute(){
             window.webrtc.mute()
@@ -33,6 +39,15 @@ export default {
         unmute(){
             window.webrtc.unmute()
             this.setMuted(false)
+        },
+        unpause(){
+            window.webrtc.resume()
+            this.setPaused(false)
+            this.setMuted(false)
+        },
+        pause(){
+            window.webrtc.pause()
+            this.setPaused(true)
         }
     }
 }
