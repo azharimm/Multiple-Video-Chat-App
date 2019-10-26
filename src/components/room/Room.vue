@@ -3,7 +3,7 @@
         <div class="people" id="people">
             <div class="person">
                 <div class="person__video">
-                    <video ref="me"></video>
+                    <video ref="me" id="me" autoplay="true"></video>
                 </div>
                 <div class="person__name">
                     {{getState.name}}
@@ -11,19 +11,22 @@
             </div>
             <person :client="client" v-for="client in getClient" :key="client.peer.id"></person>
         </div>
+        <controls></controls>
     </div>
 </template>
 
 <script>
 import {mapGetters, mapMutations} from 'vuex'
 import Person from './partials/Person'
+import Controls from './partials/Controls'
 export default {
     props: ['room'],
     computed:{
         ...mapGetters(['getState', 'getClient'])
     },
     components:{
-        Person
+        Person,
+        Controls
     },
     mounted(){
         window.webrtc.joinRoom(this.room)
@@ -32,18 +35,26 @@ export default {
             this.addPeer({video, peer})
         })
 
+        window.webrtc.on('videoRemoved', (video, peer) => {
+            this.removePeer(peer)
+        })
+
         window.webrtc.on('localStream', (stream) => {
-            var attachMediaStream = require('attachmediastream')
-            attachMediaStream(stream, this.$refs.me, {
-                autoplay: true,
-                mirror: true,
-                muted: false
-            })
+            var me = document.querySelector("#me");
+            me.srcObject = stream;
+            me.muted = this.getState.muted;
+            // var attachMediaStream = require('attachmediastream')
+            // attachMediaStream(stream, this.$refs.me, {
+            //     autoplay: true,
+            //     mirror: false,
+            //     muted:this.getState.muted
+            // })
         })
     },
     methods:{
         ...mapMutations({
-            addPeer:'addPeer'
+            addPeer:'addPeer',
+            removePeer:'removePeer'
         })
     }
 }
